@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Price Predictor</title>
+    <!-- Bootstrap 4 CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- External CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+<body>
+    <h1>📈 Stock Price Predictor</h1>
+    
+    <!-- Logout Button -->
+    <a href="{{ url_for('logout') }}" class="btn btn-danger">Logout</a>
+    
+    <form method="POST">
+        <label for="ticker">Enter Stock Ticker (e.g., AAPL, TSLA):</label>
+        <input type="text" name="ticker" required>
+        <input type="submit" value="Predict">
+    </form>
+
+    {% if ticker %}
+        <h2>Stock Information for {{ ticker }}</h2>
+        
+        {% if stock_summary %}
+            <h3>📊 {{ ticker }} Stock Summary</h3>
+            <ul>
+                <li>Open: ${{ stock_summary.open }}</li>
+                <li>High: ${{ stock_summary.high }}</li>
+                <li>Low: ${{ stock_summary.low }}</li>
+                <li>Close (Current): ${{ stock_summary.close }}</li>
+            </ul>
+            {% if inr_price %}
+                <p>🇮🇳 Price in INR: ₹{{ inr_price }}</p>
+            {% endif %}
+        {% endif %}
+
+        {% if current_price %}
+            <p>📌 Current Price: ${{ current_price }}</p>
+        {% endif %}
+        
+        {% if prediction %}
+            <h3>Predicted next close price: <strong>${{ prediction }}</strong></h3>
+        {% endif %}
+
+        {% if plot_url %}
+            <img src="{{ url_for('static', filename='plot.png') }}" alt="Stock Plot" width="600">
+        {% endif %}
+    {% endif %}
+    {% if error_message %}
+    <div class="alert alert-danger error-message">
+        {{ error_message }}
+    </div>
+    {% endif %}
+</body>
+</html>
